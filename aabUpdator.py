@@ -27,7 +27,10 @@ def clone(git):
     for item in os.listdir("./temp"):
         if not item.startswith("."):
             if os.path.exists(f"./{item}"):
-                os.remove(f"./{item}")
+                try:
+                    os.remove(f"./{item}")
+                except PermissionError:
+                    shutil.rmtree(f"./{item}")
             shutil.move(f"./temp/{item}", "./")
     shutil.rmtree('./temp')
     os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
