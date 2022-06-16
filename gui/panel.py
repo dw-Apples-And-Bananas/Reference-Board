@@ -42,5 +42,3 @@ class Panel(wx.Panel):
         img = wx.Image(path, wx.BITMAP_TYPE_PNG)
         bitmap = img.ConvertToBitmap()
         Image(self, bitmap, name)
-        # size = temp.GetWidth(), temp.GetHeight()
-        # wx.StaticBitmap(self, bitmap=temp)
