@@ -1,12 +1,15 @@
 import wx
+import gui.popup as popup
 
 
 
 class Image(wx.Panel):
     def __init__(self, panel, bitmap, name):
-        wx.Panel.__init__(self, panel, size=(bitmap.GetWidth(), bitmap.GetHeight()))
+        wx.Panel.__init__(self, panel)
         self.img = wx.StaticBitmap(self, bitmap=bitmap)
+        self.SetSize(self.img.Size)
 
+        self.panel = panel
         self.name = name
 
         self.max = self.img.Size
@@ -29,6 +32,8 @@ class Image(wx.Panel):
         if event.LeftDown():
             self.Raise()
             self.dragPos = pos
+        elif event.RightDown():
+            self.PopupMenu(popup.Menu(self), pos)
 
         if event.Dragging():
             self.SetPosition((self.Position[0]+(pos[0]-self.dragPos[0]), self.Position[1]+(pos[1]-self.dragPos[1])))
@@ -50,7 +55,7 @@ class Image(wx.Panel):
             size = (self.img.Size[0]-s, self.img.Size[1]-s)
 
         if size[0] <= self.max[0] and size[1] <= self.max[1]:
-            self.img.SetSize(size)
-            self.SetSize(self.max)
+            if size[0] > 20 and size[1] > 20:
+                self.img.SetSize(size)
 
         self.SetSize(self.img.Size)
