@@ -1,5 +1,5 @@
 import wx
-import os
+import os, sys
 import json
 from gui.panel import Panel
 
@@ -12,9 +12,7 @@ class Application(wx.Frame):
         
         self.panel = Panel(self)
 
-        while True:
-            if self.OpenDir():
-                break
+        self.OpenDir()
         
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
@@ -23,7 +21,7 @@ class Application(wx.Frame):
     def OpenDir(self):
         with wx.DirDialog(self, "Choose Directory", style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST) as dirDialog:
             if dirDialog.ShowModal() == wx.ID_CANCEL:
-                return False
+                sys.exit()
 
             path = dirDialog.GetPath()
             self.SetTitle(path.split("/")[-1])
@@ -35,7 +33,6 @@ class Application(wx.Frame):
                 self.Load(path)
 
             self.panel.currDir = path
-            return True
 
 
 
@@ -51,6 +48,7 @@ class Application(wx.Frame):
             if child != self.panel.textbox:
                 data = file[child.name]
                 child.Position = data["position"]
+                child.camPos = data["cameraPosition"]
                 child.img.Size = data["size"]
                 child.Size = data["size"]
                 child.max = data["max"]
@@ -58,12 +56,11 @@ class Application(wx.Frame):
     
 
     def OnClose(self, event):
-        with open(f"{self.panel.currDir}/reference-board.json") as f:
-            file = json.load(f)
+        file = {}
         
         for child in self.panel.Children:
             if child != self.panel.textbox:
-                file[child.name] = {"position":list(child.Position), "size":list(child.Size), "max":list(child.max)}
+                file[child.name] = {"position":list(child.Position), "cameraPosition":list(child.camPos), "size":list(child.Size), "max":list(child.max)}
 
         with open(f"{self.panel.currDir}/reference-board.json", "w") as f:
             json.dump(file, f)
