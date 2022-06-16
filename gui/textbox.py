@@ -1,5 +1,5 @@
 import wx
-import wx.richtext as rt
+# import wx.richtext as rt
 import os
 from PIL import Image
 import requests
@@ -7,9 +7,9 @@ from io import BytesIO
 
 
 
-class Box(rt.RichTextCtrl):
+class Box(wx.TextCtrl):
     def __init__(self, panel):
-        rt.RichTextCtrl.__init__(self, panel, size=(panel.Size[0],26))
+        wx.TextCtrl.__init__(self, panel, size=(panel.Size[0],26))
         self.SetBackgroundColour((30,30,30))
         self.SetForegroundColour((255,255,255))
 
